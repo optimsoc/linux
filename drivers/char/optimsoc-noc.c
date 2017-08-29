@@ -30,6 +30,7 @@
 
 #include <asm/io.h>
 #include <asm/uaccess.h>
+#include <linux/uaccess.h>
 #include <linux/fs.h>
 #include <linux/interrupt.h>
 #include <linux/kernel.h>
@@ -125,7 +126,7 @@ static void enable(unsigned ep)
 {
 	uint32_t *addr;
 
-#if DEBUG
+#ifdef DEBUG
 	printk(KERN_INFO "enable: %x", ep);
 #endif
 
@@ -141,7 +142,7 @@ static void send(unsigned ep, uint32_t word)
 {
 	uint32_t *addr;
 
-#if DEBUG
+#ifdef DEBUG
 	printk(KERN_INFO "send: %x", word);
 #endif
 
@@ -159,7 +160,7 @@ static uint32_t receive(unsigned ep)
 
 	addr = (uint32_t *)(EP_BASE + ep*EP_OFFSET + REG_RECV);
 
-#if DEBUG
+#ifdef DEBUG
 	printk(KERN_INFO "send: %x", *addr);
 #endif
 
