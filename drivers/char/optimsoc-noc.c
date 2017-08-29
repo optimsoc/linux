@@ -1,23 +1,19 @@
 /**
  * Copyright (c) 2012-2017 by the author(s)
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * =================================================================
  *
@@ -64,7 +60,7 @@
 static uint32_t OPTIMSOC_NA_BASE_VADDR = 0;
 
 /*
- * NoC adapter memory size.
+ * NoC adapter memory size bytes.
  */
 #define OPTIMSOC_NA_MEM_SIZE (8*1024*1024)
 
@@ -79,6 +75,7 @@ static uint32_t OPTIMSOC_NA_BASE_VADDR = 0;
 #define REG_SEND   0x0
 #define REG_RECV   0x0
 #define REG_ENABLE 0x4
+
 /**
  * Retrieves a word at a target address.
  */
@@ -120,7 +117,7 @@ static struct
 } adapters[NR_ENDPOINTS];
 
 /*
- * Enables an endpoint.
+ * enable() - Enables an endpoint.
  */
 static void enable(unsigned ep)
 {
@@ -136,7 +133,7 @@ static void enable(unsigned ep)
 }
 
 /*
- * Sends a word.
+ * send() - Sends a word.
  */
 static void send(unsigned ep, uint32_t word)
 {
@@ -152,7 +149,7 @@ static void send(unsigned ep, uint32_t word)
 }
 
 /*
- * Receives a word.
+ * receive() - Receives a word.
  */
 static uint32_t receive(unsigned ep)
 {
@@ -169,7 +166,7 @@ static uint32_t receive(unsigned ep)
 
 
 /*
- * Handles a NoC IRQ.
+ * irq_handler() - Handles a NoC IRQ.
  */
 static irqreturn_t irq_handler(int irq, void *opaque)
 {
@@ -207,9 +204,9 @@ static irqreturn_t irq_handler(int irq, void *opaque)
 }
 
 /*
- * Opens the NoC device.
+ * optimsoc_noc_open() - Opens the NoC device.
  */
-static int device_open(struct inode *inode, struct file *file)
+static int optimsoc_noc_open(struct inode *inode, struct file *file)
 {
 	unsigned minor;
 
@@ -236,9 +233,9 @@ static int device_open(struct inode *inode, struct file *file)
 }
 
 /*
- * Closes the NoC device.
+ * optimsoc_noc_release() - Closes the NoC device.
  */
-static int device_release(struct inode *inode, struct file *file)
+static int optimsoc_noc_release(struct inode *inode, struct file *file)
 {
 	unsigned minor;
 
@@ -257,9 +254,9 @@ static int device_release(struct inode *inode, struct file *file)
 }
 
 /*
- * Reads bytes from the NoC device.
+ * optimsoc_noc_read() - Reads bytes from the NoC device.
  */
-static ssize_t device_read(struct file *filp, char *buffer, size_t length, loff_t * offset)
+static ssize_t optimsoc_noc_read(struct file *filp, char *buffer, size_t length, loff_t * offset)
 {
 	size_t i;
 	unsigned minor;
@@ -305,9 +302,9 @@ static ssize_t device_read(struct file *filp, char *buffer, size_t length, loff_
 }
 
 /*
- * Writes bytes from the NoC device.
+ * optimsoc_noc_write() - Writes bytes from the NoC device.
  */
-static ssize_t device_write(struct file *filp, const char *buff, size_t len, loff_t * off)
+static ssize_t optimsoc_noc_write(struct file *filp, const char *buff, size_t len, loff_t * off)
 {
 	int i;
 	unsigned minor;
@@ -343,14 +340,14 @@ static ssize_t device_write(struct file *filp, const char *buff, size_t len, lof
 }
 
 static struct file_operations fops = {
-	.read = device_read,
-	.write = device_write,
-	.open = device_open,
-	.release = device_release
+	.read = optimsoc_noc_read,
+	.write = optimsoc_noc_write,
+	.open = optimsoc_noc_open,
+	.release = optimsoc_noc_release
 };
 
 /*
- * Initializes the device driver module.
+ * optimsoc_module_init() - Initializes the device driver module.
  */
 static int __init optimsoc_module_init(void)
 {
@@ -411,7 +408,7 @@ error0:
 }
 
 /*
- * Unloads the device driver module.
+ * optimsoc_module_cleanup() - Unloads the device driver module.
  */
 static void __exit optimsoc_module_cleanup(void)
 {
@@ -433,5 +430,5 @@ module_init(optimsoc_module_init);
 module_exit(optimsoc_module_cleanup);
 
 MODULE_INFO(intree, "Y");
-MODULE_LICENSE("GPL");
+MODULE_LICENSE("GPLv2");
 MODULE_AUTHOR("Pedro H. Penna");
