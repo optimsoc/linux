@@ -219,7 +219,7 @@ static int optimsoc_noc_open(struct inode *inode, struct file *file)
 		return (-EBUSY);
 
 	/* Grab resources. */
-    adapters[minor].buffer = kmalloc(OPTIMSOC_NA_BUFFER_SIZE, GFP_KERNEL);
+	adapters[minor].buffer = kmalloc(OPTIMSOC_NA_BUFFER_SIZE, GFP_KERNEL);
 	if (adapters[minor].buffer == NULL)
 		return (-ENOMEM);
 
